@@ -1,0 +1,53 @@
+; Found 5 devices
+[5]
+; Device Found: 'DaqBoard3031USB{325188}'
+[DaqBoard3031USB{325188}] [3C452666-DBEA-42FF-93C1-F6D0A183161B] [0] [5]
+; Channel List:
+        [implicitTimer]
+        [index]
+        [Encoder]
+        [Digital 2]
+        [Digital 3]
+; Device Found: 'LN-250 Hybrid Inertial Device'
+[LN-250 Hybrid Inertial Device] [3EE2B4C5-D1EB-4FEC-B72B-DB25F1DF69ED] [1] [16]
+; Channel List:
+        [implicitTimer]
+        [index]
+        [SystemTimer]
+        [GPSTime]
+        [OutputDataValidity]
+        [HybridLatitude]
+        [HybridLongitude]
+        [HybridAltitude]
+        [HybridNorthVelocity]
+        [HybridEastVelocity]
+        [HybridVerticalVelocity]
+        [HybridHeadingAngle]
+        [HybridPitchAngle]
+        [HybridRollAngle]
+        [HybridYawAngle]
+        [HybridFOM]
+; Device Found: 'Digital Counter'
+[Digital Counter] [D6FE3751-EB74-44E0-AA98-5BD70D42A3E7] [2] [3]
+; Channel List:
+        [implicitTimer]
+        [index]
+        [ticks]
+; Device Found: 'Digital Counter'
+[Digital Counter] [D6FE3751-EB74-44E0-AA98-5BD70D42A3E7] [3] [3]
+; Channel List:
+        [implicitTimer]
+        [index]
+        [ticks]
+; Device Found: 'Magnetometer'
+[Magnetometer] [7330215D-0399-44FB-982D-4F0F61BC91C6] [4] [9]
+; Channel List:
+        [implicitTimer]
+        [index]
+        [heading]
+        [pitch]
+        [roll]
+        [magLength]
+        [magX]
+        [magY]
+        [magZ]

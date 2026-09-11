@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="UCSB_Datastream::DeviceHolder">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Typedef Name="UCSB_Datastream::DeviceHolder::CacheDataType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Typedef>
+      <Struct Name="UCSB_Datastream::DeviceHolder::DictionaryBuilder" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="UCSB_Datastream::DeviceHolder::FileParser&lt;Processor&gt;" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AECQCwAAigIiAAIAAAkAIAAAAiAAAEgAQAoGEAQAIAA=</HashCode>
+      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCSB_Datastream::DataAggregationTool">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Typedef Name="UCSB_Datastream::DataAggregationTool::UpdateStatusFn" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Typedef>
+      <Struct Name="UCSB_Datastream::DataAggregationTool::sorter" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Struct Name="UCSB_Datastream::DataAggregationTool::dataElement" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+      <Typedef Name="UCSB_Datastream::DataAggregationTool::Device" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Typedef>
+      <Typedef Name="UCSB_Datastream::DataAggregationTool::DataTree" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Typedef>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>EAAACAAAAAEAAAQEgIAAAIAQAABEIAAAQAQIAAYIAAA=</HashCode>
+      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="UCSB_Datastream::CacheData&lt;DataType&gt;" Collapsed="true">
+    <Position X="6" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAEAAAAAIAAAAAIAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="UCSB_Datastream::DeviceDefinition" Collapsed="true">
+    <Position X="3.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgBAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="UCSB_Datastream::ChannelDefinition">
+    <Position X="7.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAABAACAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="UCSB_Datastream::BaseData">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEE=</HashCode>
+      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="UCSB_Datastream::timedT&lt;T&gt;" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="UCSB_Datastream::Device">
+    <Position X="3.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAMABACCAIAgIAAAEAACAAAQQAQAAAAwAAEAAAAIA=</HashCode>
+      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="UCSB_Datastream::DefaultThrowingParserHandler" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="UCSB_Datastream::DataTypeMapping" Collapsed="true">
+    <Position X="6" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAAEAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="UCSB_Datastream::MessageHeader" Collapsed="true">
+    <Position X="6" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="UCSB_Datastream::DataType" Collapsed="true">
+    <Position X="6" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>iAgAAAAAAABIAAAAAAAIgCACAACCAAAgIAAAAAAgBAI=</HashCode>
+      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="UCSB_Datastream::MESSAGE_TYPE" Collapsed="true">
+    <Position X="7.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAAACCAAAAAAAkAAAAAAAAA=</HashCode>
+      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

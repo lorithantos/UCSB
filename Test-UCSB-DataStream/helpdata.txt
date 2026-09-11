@@ -1,0 +1,9 @@
+; Please pass in the name of the directory you wish to process (enclosed in brackets)
+
+; For example: the following would convert all the spaceball files in the current directory
+; [.\] 
+
+; This would convert all of them in the directory c:\temp\20100301\
+; [c:\temp\20100301\]
+
+; The default behavior is to look in the current directory

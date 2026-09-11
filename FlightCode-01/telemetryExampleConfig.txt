@@ -1,0 +1,65 @@
+; Name of the data block we are creating
+[Full Telemetry]
+
+; Remember to change the channel count if removing any channels
+; DaqCOM
+[751CC155-0B96-460D-9792-40D2401D348B] [3] ; Channel Count
+	[computerClock]
+	[index]
+	[Channel 0]
+
+; LN-250 Hybrid Inertial Device
+[3EE2B4C5-D1EB-4FEC-B72B-DB25F1DF69ED] [16] ; Channel Count
+	[computerClock]
+	[index]
+	[SystemTimer]
+	[GPSTime]
+	[OutputDataValidity]
+	[HybridLatitude]
+	[HybridLongitude]
+	[HybridAltitude]
+	[HybridNorthVelocity]
+	[HybridEastVelocity]
+	[HybridVerticalVelocity]
+	[HybridHeadingAngle]
+	[HybridPitchAngle]
+	[HybridRollAngle]
+	[HybridYawAngle]
+	[HybridFOM]
+
+; Digital Counter
+[D6FE3751-EB74-44E0-AA98-5BD70D42A3E7] [7] ; Channel Count
+	[computerClock]
+	[index]
+	[ticks]
+	[ones]
+	[tens]
+	[hundreds]
+	[thousands]
+
+; Magnetometer
+[7330215D-0399-44FB-982D-4F0F61BC91C6] [9] ; Channel Count
+	[computerClock]
+	[index]
+	[heading]
+	[pitch]
+	[roll]
+	[magLength]
+	[magX]
+	[magY]
+	[magZ]
+
+; Ashtech
+[188072F4-E523-4C3A-B0D0-4A0045475070] [11] ; Channel Count
+	[computerClock]
+	[index]
+	[GPSTime]
+	[heading]
+	[pitch]
+	[roll]
+	[baseline]
+	[reset]
+	[latitude]
+	[longitude]
+	[altitude]
+
