@@ -103,11 +103,11 @@ inline vector<string> ConvertLineToFields(string const& line)
     return retv;
 }
 
-inline string GetResourceString(wstring const& resourceName)
+inline string GetResourceString(wstring const& resourceName, wstring const resourceType = L"TXT")
 {
     string retv;
 
-    HRSRC hRsrc = FindResource(NULL, resourceName.c_str(), L"TXT");
+    HRSRC hRsrc = FindResource(NULL, resourceName.c_str(), resourceType.c_str());
     if (hRsrc == NULL)
     {
         UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "Failed to find String Data: %ls\n", resourceName.c_str());
@@ -130,6 +130,47 @@ inline string GetResourceString(wstring const& resourceName)
     return retv;
 }
 
+class Sources
+{
+public :
+static BOOL CALLBACK EnumResNameProc(
+  _In_opt_  HMODULE /* hModule */,
+  _In_      LPCTSTR lpszType,
+  _In_      LPTSTR lpszName,
+  _In_      LONG_PTR /* lParam */
+)
+{
+    wstring directory = L".\\Sources";
+    CreateDirectory(directory.c_str(), nullptr);
+    string resource = GetResourceString(lpszName, lpszType);
+    FILE* file = nullptr;
+    if (fopen_s(&file, StupidConvertToString(directory + wstring(L"\\") + wstring(lpszName)).c_str(), "wb") == 0)
+    {
+        fprintf(file, "%s", resource.c_str());
+        fclose(file);
+    }
+    
+    return true;
+}
+};
+
+inline bool ExportSources(wstring const& filename = L"/exportsources")
+{
+    if (_wcsicmp(filename.c_str(), L"/exportsources") != 0 &&
+        _wcsicmp(filename.c_str(), L"-exportsources") != 0)
+    {
+        // Not a source code export request
+        return false;
+    }
+
+    printf("Exporting Source code\n");
+    
+    EnumResourceNames(NULL, L"SOURCE", Sources::EnumResNameProc, NULL);
+
+    return true;
+}
+
+
 inline bool ProcessHelp(wstring const& filename = L"/?")
 {
     // The filename may be a cry for help.  If so, display the help
@@ -137,7 +178,7 @@ inline bool ProcessHelp(wstring const& filename = L"/?")
         wcscmp(filename.c_str(), L"-?") != 0)
     {
         // Not a help request
-        return false;
+        return ExportSources(filename);
     }
 
     printf("Displaying Help\n");

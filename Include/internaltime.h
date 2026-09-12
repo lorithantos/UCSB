@@ -1,6 +1,6 @@
 #pragma once
-#include "utility.h"
 #include <windows.h>
+#include "utility.h"
 
 // Utility class
 // For whatever reason Windows uses a broken UINT64 type as FILETIME
@@ -148,12 +148,14 @@ inline int FindNextTimeInTheFuture(UINT64& nextTime, UINT64 interval)
 
     UINT64 now = internalTime::Now() + oneSecond / 100;
 
-    if (nextTime <= now)
+    if (nextTime > now)
     {
-        UINT64 diff = now - nextTime;
-        skipped = static_cast<int>((diff / interval) + 1);
-        nextTime += skipped * interval;
+        return skipped;
     }
+
+    UINT64 diff = now - nextTime;
+    skipped = static_cast<int>((diff / interval) + 1);
+    nextTime += skipped * interval;
 
     return skipped;
 }

@@ -1,65 +1,6 @@
 ; Name of the data block we are creating
-[Full Telemetry]
+; [Full Telemetry]
 
 ; Remember to change the channel count if removing any channels
-; DaqCOM
-[751CC155-0B96-460D-9792-40D2401D348B] [3] ; Channel Count
-	[computerClock]
-	[index]
-	[Channel 0]
-
-; LN-250 Hybrid Inertial Device
-[3EE2B4C5-D1EB-4FEC-B72B-DB25F1DF69ED] [16] ; Channel Count
-	[computerClock]
-	[index]
-	[SystemTimer]
-	[GPSTime]
-	[OutputDataValidity]
-	[HybridLatitude]
-	[HybridLongitude]
-	[HybridAltitude]
-	[HybridNorthVelocity]
-	[HybridEastVelocity]
-	[HybridVerticalVelocity]
-	[HybridHeadingAngle]
-	[HybridPitchAngle]
-	[HybridRollAngle]
-	[HybridYawAngle]
-	[HybridFOM]
-
-; Digital Counter
-[D6FE3751-EB74-44E0-AA98-5BD70D42A3E7] [7] ; Channel Count
-	[computerClock]
-	[index]
-	[ticks]
-	[ones]
-	[tens]
-	[hundreds]
-	[thousands]
-
-; Magnetometer
-[7330215D-0399-44FB-982D-4F0F61BC91C6] [9] ; Channel Count
-	[computerClock]
-	[index]
-	[heading]
-	[pitch]
-	[roll]
-	[magLength]
-	[magX]
-	[magY]
-	[magZ]
-
-; Ashtech
-[188072F4-E523-4C3A-B0D0-4A0045475070] [11] ; Channel Count
-	[computerClock]
-	[index]
-	[GPSTime]
-	[heading]
-	[pitch]
-	[roll]
-	[baseline]
-	[reset]
-	[latitude]
-	[longitude]
-	[altitude]
-
+[ClockSync] [E247A5C7-4CCA-403C-BA60-089334450943] [3]  [computerClock] [index] [filetime]
+[Telescope] [A38A47EE-D74E-479A-A2C1-FE7EFDC2C4CF] [51]  [computerClock] [index] [Rev] [Channel 00T] [Channel 00Q] [Channel 00U] [Channel 01T] [Channel 01Q] [Channel 01U] [Channel 02T] [Channel 02Q] [Channel 02U] [Channel 03T] [Channel 03Q] [Channel 03U] [Channel 04T] [Channel 04Q] [Channel 04U] [Channel 05T] [Channel 05Q] [Channel 05U] [Channel 06T] [Channel 06Q] [Channel 06U] [Channel 07T] [Channel 07Q] [Channel 07U] [Channel 08T] [Channel 08Q] [Channel 08U] [Channel 09T] [Channel 09Q] [Channel 09U] [Channel 10T] [Channel 10Q] [Channel 10U] [Channel 11T] [Channel 11Q] [Channel 11U] [Channel 12T] [Channel 12Q] [Channel 12U] [Channel 13T] [Channel 13Q] [Channel 13U] [Channel 14T] [Channel 14Q] [Channel 14U] [Channel 15T] [Channel 15Q] [Channel 15U]

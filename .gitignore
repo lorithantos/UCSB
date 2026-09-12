@@ -361,3 +361,12 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# User-specific VS state kept as .old backups
+*.suo.old
+*.v11.suo
+
+# Third-party vendor SDK material - not ours to redistribute
+AccessoriesSDK/
+*.pdf
+Include/cbw.h
+lib/cbw32*.lib

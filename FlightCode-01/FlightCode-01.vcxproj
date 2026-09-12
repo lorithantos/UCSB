@@ -14,16 +14,19 @@
     <ProjectGuid>{1914DC99-8F7B-4DED-9C99-9CA99DAD9D25}</ProjectGuid>
     <RootNamespace>ReadICD_IOTech</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <VCTargetsPath Condition="'$(VCTargetsPath11)' != '' and '$(VSVersion)' == '' and $(VisualStudioVersion) == ''">$(VCTargetsPath11)</VCTargetsPath>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -111,8 +114,10 @@
     <ClCompile Include="Telemetry.cpp" />
     <ClCompile Include="TelemetryReceiver.cpp" />
     <ClCompile Include="..\Include\UCSB-DataStream.cpp" />
+    <ClCompile Include="Telescope.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Include\CommandInterface.h" />
     <ClInclude Include="Ashtech.h" />
     <ClInclude Include="ClockSync.h" />
     <ClInclude Include="..\Include\ComPort.h" />
@@ -124,7 +129,6 @@
     <ClInclude Include="DictionaryConfigFileInterpreter.h" />
     <ClInclude Include="DisplaySource.h" />
     <ClInclude Include="..\Include\internaltime.h" />
-    <ClInclude Include="..\Include\IOTech.h" />
     <ClInclude Include="..\Include\LN250.h" />
     <ClInclude Include="..\Include\Logging.h" />
     <ClInclude Include="Magnetometer.h" />
@@ -137,8 +141,10 @@
     <ClInclude Include="TelemetryReceiver.h" />
     <ClInclude Include="..\Include\UCSB-Datastream.h" />
     <ClInclude Include="..\Include\utility.h" />
+    <ClInclude Include="Telescope.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="configuration.cfg" />
     <None Include="devices.cfg" />
     <None Include="telemetrySend.cfg" />

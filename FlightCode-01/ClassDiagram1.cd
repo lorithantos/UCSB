@@ -1,141 +1,374 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="UCSB_Datastream::DeviceHolder">
-    <Position X="10" Y="0.5" Width="1.5" />
-    <NestedTypes>
-      <Typedef Name="UCSB_Datastream::DeviceHolder::CacheDataType" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</NewMemberFileName>
-        </TypeIdentifier>
-      </Typedef>
-      <Struct Name="UCSB_Datastream::DeviceHolder::DictionaryBuilder" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</NewMemberFileName>
-        </TypeIdentifier>
-      </Struct>
-      <Struct Name="UCSB_Datastream::DeviceHolder::FileParser&lt;Processor&gt;" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</NewMemberFileName>
-        </TypeIdentifier>
-      </Struct>
-    </NestedTypes>
+  <Class Name="`anonymous-namespace'::PacketConverter" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAIAAAAAAAAACAAAAAAIAAACAAAEAIAAAgAAAAAAA=</HashCode>
+      <FileName>Telemetry.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ComPort" Collapsed="true">
+    <Position X="2" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAFMAAgRACEIAAAAIADAAgQwAAAAAAAKgBAAAAFAAAA=</HashCode>
+      <FileName>E:\UCSB\Include\ComPort.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InternalTime::internalTime" Collapsed="true">
+    <Position X="30" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAACAAEAAQAAgAAACAAAAIAAAAAAAACAAA=</HashCode>
+      <FileName>E:\UCSB\Include\internaltime.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="nsDataSource::TestDevice" Collapsed="true">
+    <Position X="22.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAACAAAAAAAAAAAAAIAAAAAAAAACBAA=</HashCode>
+      <FileName>E:\UCSB\Include\DataSource.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="nsDataSource::DataSource" Collapsed="true">
+    <Position X="13.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAABAAEWAAIgASKgBAAACAAAAAAAAAICAgQACCRAA=</HashCode>
+      <FileName>E:\UCSB\Include\DataSource.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCSB_Ashtech::Ashtech" Collapsed="true">
+    <Position X="13.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAQAACgAAAACAIBBAAAAAAACAgABEAQAAQACJAA=</HashCode>
+      <FileName>Ashtech.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCSB_ClockSync::ClockSync" Collapsed="true">
+    <Position X="13.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAggAAAACgAAAACAIBAAAEAAAAAAAAAAAAAAAAGJQE=</HashCode>
+      <FileName>ClockSync.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCSB_CommandInterface::CommandBase" Collapsed="true">
+    <Position X="10.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAIABAAAAACAIAAAoBABgAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\UCSB\Include\CommandInterface.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCSB_CommandInterface::CommandInterface&lt;T&gt;" Collapsed="true">
+    <Position X="10.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAQAAAAAAAAAAAACAAAAAAAABAACABAAAAAAAA=</HashCode>
+      <FileName>E:\UCSB\Include\CommandInterface.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCSB_CounterSource::CounterSource" Collapsed="true">
+    <Position X="16.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACgAgAACAIBAAAECAAAAAAAAgAAACAACJAA=</HashCode>
+      <FileName>CounterSource.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCSB_DAQCOM::DaqCOMSource" Collapsed="true">
+    <Position X="19.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACgBAAACAIBAAAAAAABAAAAAIAAABAACJAA=</HashCode>
+      <FileName>DaqCOM.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCSB_Datastream::DeviceHolder" Collapsed="true">
+    <Position X="33.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AECQCwAAigIiAAIAAAkAIAAAAiAAAEgAQAoGEAQAIAA=</HashCode>
-      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+      <FileName>E:\UCSB\Include\UCSB-Datastream.h</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="UCSB_Datastream::DataAggregationTool">
-    <Position X="0.5" Y="1.75" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Nested Types" Collapsed="false" />
-    </Compartments>
-    <NestedTypes>
-      <Typedef Name="UCSB_Datastream::DataAggregationTool::UpdateStatusFn" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</NewMemberFileName>
-        </TypeIdentifier>
-      </Typedef>
-      <Struct Name="UCSB_Datastream::DataAggregationTool::sorter" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</NewMemberFileName>
-        </TypeIdentifier>
-      </Struct>
-      <Struct Name="UCSB_Datastream::DataAggregationTool::dataElement" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</NewMemberFileName>
-        </TypeIdentifier>
-      </Struct>
-      <Typedef Name="UCSB_Datastream::DataAggregationTool::Device" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</NewMemberFileName>
-        </TypeIdentifier>
-      </Typedef>
-      <Typedef Name="UCSB_Datastream::DataAggregationTool::DataTree" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</NewMemberFileName>
-        </TypeIdentifier>
-      </Typedef>
-    </NestedTypes>
+  <Class Name="UCSB_Datastream::DataAggregationTool" Collapsed="true">
+    <Position X="3.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>EAAACAAAAAEAAAQEgIAAAIAQAABEIAAAQAQIAAYIAAA=</HashCode>
-      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+      <FileName>E:\UCSB\Include\UCSB-Datastream.h</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="UCSB_Magnetometer::Magnetometer" Collapsed="true">
+    <Position X="19.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAgAAQAACgAAAACAIBAAAAkAAAAAAAAAEQBACACJAA=</HashCode>
+      <FileName>Magnetometer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCSB_Telescope::Telescope" Collapsed="true">
+    <Position X="22.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAEAQAACgAAAACgIBAAAAAAAAABAAAAAQAASACJAA=</HashCode>
+      <FileName>Telescope.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCSBUtility::Logging" Collapsed="true">
+    <Position X="31.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAEAAAAAAAAAAAgAAAIAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\UCSB\Include\Logging.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCSBUtility::AutoCloseHandle&lt;HANDLETYPE, invalidValue, CloseFnType, CloseFn&gt;" Collapsed="true">
+    <Position X="28.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQCCAAAAAAAEAAAAAAAAAAAACgAAAAAAA=</HashCode>
+      <FileName>E:\UCSB\Include\utility.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCSBUtility::FileHandle" Collapsed="true">
+    <Position X="28.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAKAAAAAAAAEAAAAAAAAQAAAAgAAAAAAg=</HashCode>
+      <FileName>E:\UCSB\Include\utility.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCSBUtility::CMutexHolder" Collapsed="true">
+    <Position X="30" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgQAAAAAAAAAAAACAAAAAAAAAAAAAAAAAggAAAAAA=</HashCode>
+      <FileName>E:\UCSB\Include\utility.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCSBUtility::NameLookup&lt;Value&gt;" Collapsed="true">
+    <Position X="33.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAACEAAAAAAAAAAAAAAAAAAAAAAAAACCAAAAAAAAA=</HashCode>
+      <FileName>E:\UCSB\Include\utility.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UCSBUtility::CriticalSectionCache" Collapsed="true">
+    <Position X="31.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABIAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>E:\UCSB\Include\utility.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DisplaySource" Collapsed="true">
+    <Position X="16.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAiAACAAAAACAABAAAAAAAAAAAAACAAAAAACBAA=</HashCode>
+      <FileName>DisplaySource.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LN250Reader" Collapsed="true">
+    <Position X="22.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ARAAAAIUACABAAACECBCAAgIAAAjEKAWIAQAwAACBAA=</HashCode>
+      <FileName>LN250.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MMCSource" Collapsed="true">
+    <Position X="25.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAICgAAAACAAAAAAAAAAAAAAAAAAAAAABCJAA=</HashCode>
+      <FileName>MMCSource.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Telemetry" Collapsed="true">
+    <Position X="25.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKAAAAIAICAAAIAiAChAAAJAAAggAAAAAAQAIgACBBA=</HashCode>
+      <FileName>Telemetry.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TelemetryReceiver" Collapsed="true">
+    <Position X="19.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAQAQACACAAAABCAABEAAAACAAAAAAAAAAAAAACBEA=</HashCode>
+      <FileName>TelemetryReceiver.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="`anonymous-namespace'::PrintDevice" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAQCAAAIAAACAAAAAAAAAAAABAEAA=</HashCode>
+      <FileName>DisplaySource.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="ConfigFileReader::DefaultConfigurationName" Collapsed="true">
+    <Position X="33.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABABAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>E:\UCSB\Include\ConfigFileReader.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="ConfigFileReader::ReadFieldsAdapter&lt;processFnType&gt;" Collapsed="true">
+    <Position X="31.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAEAAAAAAAAAAAAAAAgAAAAAIA=</HashCode>
+      <FileName>E:\UCSB\Include\ConfigFileReader.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="LN250::HighSpeedPortMessageHeader" Collapsed="true">
+    <Position X="4.75" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEIAAAAAAAAAAAgQAAAAAAEAEAAACAAAAAAA=</HashCode>
+      <FileName>E:\UCSB\Include\LN250.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="LN250::MessageControl" Collapsed="true">
+    <Position X="28.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAIAAAAAAAAAAAQAAEEBAAAAAAAAAA=</HashCode>
+      <FileName>E:\UCSB\Include\LN250.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="LN250::HybridInertialData" Collapsed="true">
+    <Position X="30" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAEAACAgCAAAIAAIAAAgAAAAAAgEAIAAACEAoJAM=</HashCode>
+      <FileName>E:\UCSB\Include\LN250.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="LN250::ModeCommandData" Collapsed="true">
+    <Position X="30" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACCMAtAkAAIIAAGIEIABAAAIAEAEEAgAIgAAINAA=</HashCode>
+      <FileName>E:\UCSB\Include\LN250.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="LN250::INSStatusData" Collapsed="true">
+    <Position X="33.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAgAAAAAAAAAAAgAAAAAAAEAAAAAAAAIJAA=</HashCode>
+      <FileName>E:\UCSB\Include\LN250.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="LN250::InputBuffer&lt;processFnType&gt;" Collapsed="true">
+    <Position X="31.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAEIAAQAAAEAAAAAAAAAAAAAAAAAAwAAAAAIA=</HashCode>
+      <FileName>E:\UCSB\Include\LN250.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="nsDataSource::RegisterHelper&lt;DataDeviceClass&gt;" Collapsed="true">
+    <Position X="33.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAAAAAAAAAAAAAEAAABAAAAAAAAA=</HashCode>
+      <FileName>E:\UCSB\Include\DataSource.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="nsDataSource::AutoRegister&lt;DataDeviceClass&gt;" Collapsed="true">
+    <Position X="19.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\UCSB\Include\DataSource.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Periodic::PeriodicBase" Collapsed="true">
+    <Position X="4" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAgAAAAAAAAQAAAIEAAAQAAAAAAAEAAAAAAAAgAAgA=</HashCode>
+      <FileName>E:\UCSB\Include\Periodic.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Periodic::MakePeriodic&lt;PeriodicFnType&gt;" Collapsed="true">
+    <Position X="4" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAIAIAAAAAgAEAAIAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>E:\UCSB\Include\Periodic.h</FileName>
+    </TypeIdentifier>
+  </Struct>
   <Struct Name="UCSB_Datastream::CacheData&lt;DataType&gt;" Collapsed="true">
-    <Position X="6" Y="1.75" Width="1.5" />
+    <Position X="28.25" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAABAAAEAAAAAIAAAAAIAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+      <FileName>E:\UCSB\Include\UCSB-Datastream.h</FileName>
     </TypeIdentifier>
   </Struct>
   <Struct Name="UCSB_Datastream::DeviceDefinition" Collapsed="true">
-    <Position X="3.5" Y="0.5" Width="1.5" />
+    <Position X="5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAgBAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+      <FileName>E:\UCSB\Include\UCSB-Datastream.h</FileName>
     </TypeIdentifier>
   </Struct>
-  <Struct Name="UCSB_Datastream::ChannelDefinition">
-    <Position X="7.75" Y="1.75" Width="1.5" />
+  <Struct Name="UCSB_Datastream::ChannelDefinition" Collapsed="true">
+    <Position X="30" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAgAAABAACAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
-      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+      <FileName>E:\UCSB\Include\UCSB-Datastream.h</FileName>
     </TypeIdentifier>
   </Struct>
-  <Struct Name="UCSB_Datastream::BaseData">
-    <Position X="0.5" Y="3.25" Width="1.5" />
+  <Struct Name="UCSB_Datastream::BaseData" Collapsed="true">
+    <Position X="1" Y="6.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEE=</HashCode>
-      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+      <FileName>E:\UCSB\Include\UCSB-Datastream.h</FileName>
     </TypeIdentifier>
   </Struct>
   <Struct Name="UCSB_Datastream::timedT&lt;T&gt;" Collapsed="true">
-    <Position X="0.5" Y="4.75" Width="1.5" />
+    <Position X="1" Y="8" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAgAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+      <FileName>E:\UCSB\Include\UCSB-Datastream.h</FileName>
     </TypeIdentifier>
   </Struct>
-  <Struct Name="UCSB_Datastream::Device">
-    <Position X="3.5" Y="1.25" Width="1.5" />
+  <Struct Name="UCSB_Datastream::Device" Collapsed="true">
+    <Position X="5" Y="5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>EAAAMABACCAIAgIAAAEAACAAAQQAQAAAAwAAEAAAAIA=</HashCode>
-      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+      <HashCode>EAAAMABACCAIAgIAAAEABCAAAQQAQAAAAwAAEAAAAIA=</HashCode>
+      <FileName>E:\UCSB\Include\UCSB-Datastream.h</FileName>
     </TypeIdentifier>
   </Struct>
   <Struct Name="UCSB_Datastream::DefaultThrowingParserHandler" Collapsed="true">
     <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAACAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACIAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\UCSB\Include\UCSB-Datastream.h</FileName>
     </TypeIdentifier>
   </Struct>
   <Struct Name="UCSB_Datastream::DataTypeMapping" Collapsed="true">
-    <Position X="6" Y="2.75" Width="1.5" />
+    <Position X="31.75" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAAEAAAAAAQAAAAAAAA=</HashCode>
-      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+      <FileName>E:\UCSB\Include\UCSB-Datastream.h</FileName>
     </TypeIdentifier>
   </Struct>
-  <Typedef Name="UCSB_Datastream::MessageHeader" Collapsed="true">
-    <Position X="6" Y="5" Width="1.5" />
+  <Struct Name="UCSBUtility::StringPtrPair" Collapsed="true">
+    <Position X="7.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\UCSB\Include\utility.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="UCSBUtility::GUIDLess" Collapsed="true">
+    <Position X="28.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\UCSB\Include\utility.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="nsDataSource::ChannelDefinition" Collapsed="true">
+    <Position X="7.75" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+      <FileName>E:\UCSB\Include\DataSource.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="UCSB_Datastream::MessageHeader" Collapsed="true">
+    <Position X="4.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>E:\UCSB\Include\UCSB-Datastream.h</FileName>
     </TypeIdentifier>
   </Typedef>
   <Enum Name="UCSB_Datastream::DataType" Collapsed="true">
-    <Position X="6" Y="4" Width="1.5" />
+    <Position X="28.25" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>iAgAAAAAAABIAAAAAAAIgCACAACCAAAgIAAAAAAgBAI=</HashCode>
-      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+      <FileName>E:\UCSB\Include\UCSB-Datastream.h</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="UCSB_Datastream::MESSAGE_TYPE" Collapsed="true">
-    <Position X="7.75" Y="4" Width="1.5" />
+    <Position X="30" Y="6" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAACAAAAAAAAAAAAAAAAAAACCAAAAAAAkAAAAAAAAA=</HashCode>
-      <FileName>c:\Users\Lori\Documents\Visual Studio 2008\Projects\UCSB\Include\UCSB-Datastream.h</FileName>
+      <HashCode>AAAACAAAAAAAACAAAAAAAAAACCAAAAAAAkAAAAAAAAA=</HashCode>
+      <FileName>E:\UCSB\Include\UCSB-Datastream.h</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />

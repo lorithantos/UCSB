@@ -5,10 +5,9 @@
 
 #include "ConfigFileReader.h"
 #include "DataSource.h"
-#include "internalTime.h"
 #include "Periodic.h"
-#include "ashtech.h"
-#include "UCSB-Datastream.h"
+
+#include "CommandInterface.h"
 
 #include <string>
 #include <vector>
@@ -110,17 +109,6 @@ int _tmain(int /*argc*/, _TCHAR* /*argv */[])
     try
     {
         InterpretConfigurationFields(L"Devices", CreateDataSources);
-        //if (UCSBUtility::FileExits("devices.cfg"))
-        //{
-        //    logging.LogError("Loading Devices.cfg\n");
-        //    InterpretConfigurationFileFields(L"devices.cfg", CreateDataSources);
-        //}
-        //else
-        //{
-        //    logging.LogError("Loading Devices as a resource\n");
-        //    InterpretConfigurationResourceFields(L"Devices", CreateDataSources);
-        //}
-
 
         // Ensure that all of the devices are registered before writing the first file
         vector<HANDLE> hAll;
@@ -142,15 +130,43 @@ int _tmain(int /*argc*/, _TCHAR* /*argv */[])
                 (*beg)->GetFrequency()));
         }
 
-        SetConsoleTitleA("press any key to stop data collection");
+        SetConsoleTitleA("press q or space key to stop data collection");
 
         while (!g_quit)
         {
             if (_kbhit())
             {
-                _getch();
-                g_quit = true;
-                break;
+                char key = static_cast<char>(_getch());
+                if (key == 'T')
+                {
+                    UCSB_CommandInterface::CallFunction("Digital Counter", "IncrementThousands");
+                    continue;
+                }
+
+                if (key == 't')
+                {
+                    UCSB_CommandInterface::CallFunction("Digital Counter", "IncrementThousands", 1);
+                    continue;
+                }
+
+                if (key == 'h')
+                {
+                    UCSB_CommandInterface::CallFunction("Digital Counter", "IncrementHundreds", "5", 0);
+                    continue;
+                }
+
+                if (tolower(key) == 'd')
+                {
+                    std::string names = UCSB_CommandInterface::GetFunctionList();
+                    MessageBoxA(NULL, names.c_str(), "Test", MB_OK);
+                    continue;
+                }
+
+                if (tolower(key) == 'q' || key == ' ')
+                {
+                    g_quit = true;
+                    break;
+                }
             }
 
             // Write the current data to the file
@@ -171,13 +187,14 @@ int _tmain(int /*argc*/, _TCHAR* /*argv */[])
             //return 0;
         }
 
-        for (size_t i=0; i < hAll.size(); ++i)
-        {
-            CloseHandle(hAll[i]);
-        }
-
         // Write out the remaining data
         g_devices.WriteCurrentData(g_hFile);
+
+        for (DeviceIter beg = g_DataSources.begin(); 
+            beg < g_DataSources.end(); ++beg)
+        {
+            delete *beg;
+        }
 
         CloseHandle(g_hFile);
     }
@@ -190,6 +207,7 @@ int _tmain(int /*argc*/, _TCHAR* /*argv */[])
         printf("Exiting due to thrown error\n");
     }
 
+    _CrtSetDbgFlag(_CRTDBG_LEAK_CHECK_DF);
 
     return 0;
 }

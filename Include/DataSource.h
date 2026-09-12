@@ -2,7 +2,6 @@
 
 #include "internaltime.h"
 #include "UCSB-Datastream.h"
-#include "utility.h"
 
 #include <string>
 #include <map>
@@ -32,6 +31,8 @@ public :
     // No data device can work without having its own Tick function
     virtual bool Tick(internalTime const& now)
     {
+        UCSBUtility::CriticalSectionCache::CriticalSection cs(GetName());
+        m_dsNow = now;
         bool retv = TickImpl(now);
         return retv;
     }
@@ -106,12 +107,16 @@ private :
     string              m_name;
     std::vector<BYTE>   m_mostRecentData;
     BYTE                m_index;
+    internalTime        m_dsNow;
 
     static              BYTE m_lastDevice;
 };
 
 
+// Pointer to a function that takes a list of devices and returns a pointer to a DataSource object
 typedef DataSource*(*CreateDeviceFn)(DeviceHolder& devices);
+
+// The iterator for a mapping between strings and a CreateDeviceFunction
 typedef std::map<std::string, CreateDeviceFn>::const_iterator DeviceFactoryIter;
 
 template<typename DataDeviceClass>
@@ -127,7 +132,7 @@ struct RegisterHelper
     RegisterHelper()
     {
         DeviceFactoryMap()[UCSBUtility::ToLower(
-            DataDeviceClass::GetName())] = Create;
+            DataDeviceClass::GetName())] = RegisterHelper::Create;
     }
 
     // Yes this is stupid.  Don't remove it unless you have

@@ -2,24 +2,22 @@
 //
 #include "resource.h"
 
-//#define APSTUDIO_READONLY_SYMBOLS
-///////////////////////////////////////////////////////////////////////////////
-////
-//// Generated from the TEXTINCLUDE 2 resource.
-////
-//#include "afxres.h"
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
 //
-///////////////////////////////////////////////////////////////////////////////
-//#undef APSTUDIO_READONLY_SYMBOLS
+// Generated from the TEXTINCLUDE 2 resource.
 //
-///////////////////////////////////////////////////////////////////////////////
-//// English (U.S.) resources
-//
-//#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-//#ifdef _WIN32
-//LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-//#pragma code_page(1252)
-//#endif //_WIN32
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -53,7 +51,21 @@ END
 //
 
 HELPDATA                TXT                     "configuration.cfg"
-//#endif    // English (U.S.) resources
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// source
+//
+
+FLIR-Capture.h          source                  "FLIR-Capture.h"
+resource.h              source                  "resource.h"
+targetver.h             source                  "targetver.h"
+TimedDownload.h         source                  "TimedDownload.h"
+FLIR-Capture.cpp        source                  "FLIR-Capture.cpp"
+stdafx.cpp              source                  "stdafx.cpp"
+TimedDownload.cpp       source                  "TimedDownload.cpp"
+
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

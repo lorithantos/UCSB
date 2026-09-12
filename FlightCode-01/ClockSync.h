@@ -2,6 +2,7 @@
 
 #include "DataSource.h"
 #include "internalTime.h"
+#include "CommandInterface.h"
 
 #include <string>
 
@@ -14,7 +15,7 @@ using nsDataSource::FieldIter;
 
 // Dictionary data
 
-class ClockSync : public nsDataSource::DataSource, public nsDataSource::AutoRegister<ClockSync>
+class ClockSync : public nsDataSource::DataSource, public nsDataSource::AutoRegister<ClockSync>, UCSB_CommandInterface::CommandInterface<ClockSync>
 {
 public:
     ClockSync(void);
@@ -23,6 +24,7 @@ public:
 public :
     virtual bool Start()
     {
+        m_run = true;
         GetDeviceHolder().RegisterWriter(*this, GetClassGUID());
         return true;
     }
@@ -35,6 +37,7 @@ public :
 
     virtual bool TickImpl(InternalTime::internalTime const& now)
     {
+        m_Data.filetime = InternalTime::internalTime::Now();
         GetDeviceHolder().WriteDataWithCache(now, *this, m_Data);
         return true;
     }
@@ -50,16 +53,27 @@ public :
             return end;
         }
 
-        // Read the frequency from the configuration
-        std::string frequency = *beg++;
-
-        //// Read the index from the configuration
-        //std::string index = *beg++;
-
-        SetFrequency(static_cast<DWORD>(atoi(frequency.c_str())));
-        //m_Data.index = static_cast<DWORD>(atoi(index.c_str()));
+        SetFrequency(UCSBUtility::ToINT<DWORD>(*beg++));
 
         return beg;
+    }
+
+public  :
+    static void RegisterCommandFunctions()
+    {
+        AddFunction("Pause", &ClockSync::Pause);
+        AddFunction("Unpause", &ClockSync::Pause);
+    }
+
+private :
+    void Pause()
+    {
+        m_run = false;
+    }
+
+    void UnPause()
+    {
+        m_run = true;
     }
 
 public :
@@ -85,14 +99,12 @@ public :
 private :
     struct localData
     {
-        UINT64  cpu;
         UINT64  filetime;
 
         static std::vector<nsDataSource::ChannelDefinition>  GetClassDescription()
         {
             static nsDataSource::ChannelDefinition definition[] =
             {
-                {"UINT64_I", "cpu"},
                 {"UINT64_I", "filetime"},
             };
 
@@ -100,7 +112,8 @@ private :
         }
     };
 
-    localData  m_Data;
+    localData   m_Data;
+    bool        m_run;
 };
 
 }

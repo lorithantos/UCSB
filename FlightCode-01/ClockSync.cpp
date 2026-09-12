@@ -7,8 +7,6 @@ namespace UCSB_ClockSync
 ClockSync::ClockSync(void)
     : AutoRegister<ClockSync>(0)
 {
-    //m_Data.index = 0;
-    m_Data.cpu = 0;
     m_Data.filetime = 0;
 }
 

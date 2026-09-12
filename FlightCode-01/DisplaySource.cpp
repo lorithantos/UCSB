@@ -11,7 +11,7 @@ namespace
 
 struct PrintDevice : UCSB_Datastream::DefaultThrowingParserHandler
 {
-    PrintDevice() : implicitIndex(256) {}
+    PrintDevice() : m_implicitIndex(256) {}
 
     void DictionaryUpdated() {};
 
@@ -19,9 +19,9 @@ struct PrintDevice : UCSB_Datastream::DefaultThrowingParserHandler
     {
         //char buffer[1024];
         string output = device.DisplayName();
-        PadToWidth(output, width);
+        PadToWidth(output, m_width);
         
-        int index = implicitIndex++;
+        int index = m_implicitIndex++;
 
         if (device.GetChannel(1).dataType == UCSB_Datastream::UCHAR &&
             !strcmp(device.GetChannel(1).displayName, "index"))
@@ -55,19 +55,19 @@ struct PrintDevice : UCSB_Datastream::DefaultThrowingParserHandler
                 header += string(data.size() - header.size(), ' ');
             }
 
-            size_t lines = output.size() / width;
+            size_t lines = output.size() / m_width;
             if (lines > 0)
             {
-                size_t newLines = (output.size() + header.size()) / width;
+                size_t newLines = (output.size() + header.size()) / m_width;
                 if (newLines > lines)
                 {
                     // Adjust
-                    PadToWidth(output, width);
+                    PadToWidth(output, m_width);
 
                     // Add Next lien
                     output += nextLine;
                     // Re-adjust
-                    PadToWidth(output, width);
+                    PadToWidth(output, m_width);
                     nextLine.clear();
                 }
             }
@@ -76,25 +76,20 @@ struct PrintDevice : UCSB_Datastream::DefaultThrowingParserHandler
             nextLine += data;
         }
 
-        PadToWidth(output, width);
+        PadToWidth(output, m_width);
         output += nextLine;
-        PadToWidth(output, width);
+        PadToWidth(output, m_width);
 
         // Blank line at the end
-        output += string(width, ' ');
+        output += string(m_width, ' ');
 
         //printf ("%s", output.c_str());
         outputStrings[index] = output;
     }
 
-    static void InvalidData(BYTE messageID, Device const& device, 
-        BYTE byteCount, BYTE const* pPayload)
+    static void InvalidData(BYTE /*messageID*/, Device const& device, 
+        BYTE byteCount, BYTE const* /*pPayload*/)
     {
-        // Silence the compiler warning
-        messageID;
-        pPayload;
-
-
         UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "%s expected %d bytes received %d\n", 
             device.DisplayName().c_str(), device.GetDataSize(), byteCount);
     }
@@ -105,9 +100,9 @@ struct PrintDevice : UCSB_Datastream::DefaultThrowingParserHandler
     }
 
 
-    int width;
+    int m_width;
 
-    int implicitIndex;
+    int m_implicitIndex;
 
     std::map<int, string>  outputStrings;
 };
@@ -137,7 +132,7 @@ bool DisplaySource::TickImpl(InternalTime::internalTime const& now)
         100000, __FUNCTION__, cachedData.size(), m_screenBufferInfo.dwSize.X, " ");
 
     PrintDevice pPrint;
-    pPrint.width = m_screenBufferInfo.dwSize.X;
+    pPrint.m_width = m_screenBufferInfo.dwSize.X;
     DeviceHolder::FileParser<PrintDevice> parser(GetDeviceHolder(), pPrint);
     LN250::InputBuffer<DeviceHolder::FileParser<PrintDevice> > fileBuffer(parser);
 

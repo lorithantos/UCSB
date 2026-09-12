@@ -1,8 +1,11 @@
 #include "StdAfx.h"
 #include "MMCSource.h"
 
-#pragma comment(lib, "cbw32.lib")
+#define NO_MMC
 
+#ifdef NO_MMC
+#else
+#pragma comment(lib, "cbw32.lib")
 
 /* Variable Declarations */
 int BoardNum = 0;
@@ -46,3 +49,4 @@ bool MMCSource::TickImpl(InternalTime::internalTime const& now)
     return true;
 }
 
+#endif

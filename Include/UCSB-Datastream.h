@@ -2,7 +2,6 @@
 
 #include <windows.h>
 #include "LN250.h"
-#include "utility.h"
 
 #include <map>
 #include <string>
@@ -605,6 +604,10 @@ public :
     {
         DWORD deviceNumber = FindDevice(deviceID);
 
+        // Since we require a DataSource in the write data
+        // Make sure you can't register without already being one
+        static_cast<nsDataSource::DataSource const*>(&source);
+
         if (deviceNumber == INVALID_DEVICE_NUMBER)
         {
             throw __FUNCTION__ " Cannot register\n No matching GUID found";
@@ -618,7 +621,7 @@ public :
     }
 
     template<typename SrcType, typename DataType>
-    void WriteDataWithCache(UINT64 timer, SrcType const& source, DataType const& data) const
+    void WriteDataWithCache(UINT64 /*timer*/, SrcType const& source, DataType const& data) const
     {
         std::map<void const*, BYTE>::const_iterator cit = m_writeMap.find(&source);
 
@@ -630,7 +633,8 @@ public :
         }
 
 #if USE_TIMESTAMP
-        timedT<DataType> writeData(timer, source.GetIndex(), data);
+        static_cast<nsDataSource::DataSource const*>(&source);
+        timedT<DataType> writeData(UCSBUtility::ReadTime(), source.GetIndex(), data);
 #else
         timer;
         DataType const& writeData = data;

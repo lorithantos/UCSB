@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include <io.h>
+#include <map>
 
 #include <windows.h>
 #include <Objbase.h>
@@ -94,8 +95,10 @@ inline string StupidConvertToString(wstring const& input)
 template<size_t bufferSize>
 inline string ConvertBufferToString(char const (&buffer)[bufferSize])
 {
+    // Copy the buffer to a string buffer
     string retv(buffer, buffer+bufferSize);
-
+    
+    // return only the minimal string (if zero terminated, limits the size)
     return string(retv.begin(), retv.begin() + strlen(retv.c_str()));
 }
 
@@ -300,6 +303,183 @@ private :
     mutable HANDLE m_hMutex;
 };
 
+
+template<typename Value>
+class NameLookup
+{
+    typedef std::string string;
+    typedef std::map<std::string, Value> MessageMap;
+
+public:
+    NameLookup () {}
+
+    void Add(string const& name, Value fn)
+    {
+        m_map[name] = fn;
+    }
+
+    bool FindName(string const& name, Value& outValue)
+    {
+        MessageMap::const_iterator cit = m_map.find(name);
+        if (cit == m_map.end())
+        {
+            //// Display purposes, not an error
+            //UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "Name (%s) is not in map\n", 
+            //    name.c_str());
+            return false;
+        }
+
+        outValue = cit->second;
+        return true;
+    }
+
+    bool FindName(string const& name, Value** ppOutValue)
+    {
+        MessageMap::const_iterator cit = m_map.find(name);
+        if (cit == m_map.end())
+        {
+            //// Display purposes, not an error
+            //UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "Name (%s) is not in map\n", 
+            //    name.c_str());
+            return false;
+        }
+
+        *ppOutValue = const_cast<Value*>(&cit->second);
+        return true;
+    }
+
+    std::vector<string> GetNames()
+    {
+        std::vector<string> retv;
+        MessageMap::const_iterator cit = m_map.begin();
+        for(MessageMap::const_iterator cit = m_map.begin();
+            cit != m_map.end(); ++cit)
+        {
+            retv.push_back(cit->first);
+        }
+
+        return retv;
+    }
+
+private :
+    MessageMap          m_map;
+};
+
+// Uses only lower case versions of the names passed to it
+// Serializes only the object registered via Add
+class CriticalSectionCache
+{
+    typedef std::string string;
+
+public :
+
+    class CriticalSection
+    {
+    public :
+        CriticalSection(string const& name)
+            : pcs(Enter(ToLower(name)))
+        {
+        }
+        
+        ~CriticalSection()
+        {
+            if (pcs)
+            {
+                LeaveCriticalSection(pcs);
+            }
+            else
+            {
+                int i = 0;
+                i;
+            }
+        }
+
+    private :
+        CriticalSection(CriticalSection const&);
+        CriticalSection operator = (CriticalSection const&);
+
+        CRITICAL_SECTION* pcs;
+    };
+
+    static void Add(string const& name)
+    {
+        NameLookup<CRITICAL_SECTION>& map = GetMap();
+        CRITICAL_SECTION cs = {};
+
+        string _name = ToLower(name);
+
+        // Only add once
+        if (map.FindName(_name, cs))
+        {
+            return;
+        }
+        
+        // Add a copy of the current (empty) critical section
+        // In order to initialize the one that will actually be used
+        // we will need to grab the real one after this call
+        map.Add(_name, cs);
+
+        // Get the real critical section back
+        CRITICAL_SECTION* real;
+        map.FindName(_name, &real);
+
+        InitializeCriticalSectionAndSpinCount(real, 0x400);
+    }
+
+private :
+    static CRITICAL_SECTION* Enter(string const& name)
+    {
+        CRITICAL_SECTION* pcs;
+
+        if (GetMap().FindName(name, &pcs))
+        {
+            ::EnterCriticalSection(pcs);
+            return pcs;
+        }
+
+        return NULL;
+    }
+
+    //static void Leave(string const& name)
+    //{
+    //    CRITICAL_SECTION* pcs;
+
+    //    if (GetMap().FindName(name, &pcs))
+    //    {
+    //        ::LeaveCriticalSection(pcs);
+    //    }
+    //}
+
+private :
+    static NameLookup<CRITICAL_SECTION>& GetMap()
+    {
+        static NameLookup<CRITICAL_SECTION> criticalSections;
+
+        static bool init;
+
+        if (!init)
+        {
+            init = true;
+            _onexit(Cleanup);
+        }
+
+        return criticalSections;
+    }
+
+    static int Cleanup()
+    {
+        NameLookup<CRITICAL_SECTION>& map = GetMap();
+        std::vector<string> names = map.GetNames();
+        for (std::vector<string>::const_iterator cit = names.begin();
+            cit != names.end(); ++cit)
+        {
+            CRITICAL_SECTION* pcs;
+            map.FindName(*cit, &pcs);
+            DeleteCriticalSection(pcs);
+        }
+        return 0;
+    }
+};
 
 inline GUID ConvertToGUID(const std::string& guidText)
 {

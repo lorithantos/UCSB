@@ -64,12 +64,6 @@
     <None Include="TimedDownload.log">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="txt1.bin">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="txt2.bin">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -78,6 +72,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\Programs\FLIR IR camera with Pleora GigE\Flir C Code\AccessoriesSDK\lib\ISC_Camera.lib" />
+    <Library Include="..\AccessoriesSDK\lib\ISC_Camera.lib" />
   </ItemGroup>
 </Project>

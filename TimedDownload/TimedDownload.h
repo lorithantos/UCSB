@@ -103,7 +103,7 @@ private :
             DWORD       id;
         };
 
-        StatusName statusName[] = 
+        static StatusName statusName[] = 
         {
             "INTERNET_STATUS_RESOLVING_NAME", 10,
             "INTERNET_STATUS_NAME_RESOLVED", 11,
@@ -164,6 +164,7 @@ struct queuedFile
                                             // In fact, use this as an example of how NOT to write
                                             // real code.
     HINTERNET       hInternet;              // Handle to the internet connection used for this download
+    void (*download)(queuedFile&, std::wstring const& fullPathName);
 
     queuedFile()
         : hInternet(NULL)

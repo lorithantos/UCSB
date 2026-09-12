@@ -14,6 +14,8 @@
 
 
 // TODO: reference additional headers your program requires here
+#include "utility.h"
+
 extern HANDLE g_hFile;
 // extern const GUID GUID_IOTechDevice;
 // extern const GUID GUID_InternalTimer;

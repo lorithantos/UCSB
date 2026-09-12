@@ -25,6 +25,8 @@ struct PeriodicBase
     {
     }
 
+    virtual ~PeriodicBase() { }
+
     HANDLE BeginThreadImpl(DWORD frequency)
     {
         if (frequency == 0)
@@ -33,7 +35,7 @@ struct PeriodicBase
         }
 
         m_frequency = frequency;
-        m_thread = reinterpret_cast<HANDLE>(_beginthread(m_timedThread, 0, this));
+        m_thread = reinterpret_cast<HANDLE>(_beginthread(m_timedThread, 0, static_cast<PeriodicBase*>(this)));
 
         return m_thread;
     }
@@ -65,6 +67,7 @@ struct PeriodicBase
             WaitForSingleObjectEx(hTimer, 100, true);
         }
 
+        CancelWaitableTimer(hTimer);
     }
 
     static HANDLE GetMutex()
@@ -91,6 +94,8 @@ struct MakePeriodic : PeriodicBase
         return pLeak->BeginThreadImpl(frequency);
     }
 
+    virtual ~MakePeriodic() { }
+
 private :
     MakePeriodic(PeriodicFnType core) : PeriodicBase (Complete, TimedThread), m_core(core) 
     {
@@ -101,7 +106,7 @@ private :
                                   DWORD /*dwTimerLowValue*/,
                                   DWORD /*dwTimerHighValue*/)
     {
-        MakePeriodic* pThis = reinterpret_cast<MakePeriodic*>(lpArgToCompletionRoutine);
+        MakePeriodic* pThis = static_cast<MakePeriodic*>(reinterpret_cast<PeriodicBase*>(lpArgToCompletionRoutine));
 
         //FILETIME ft = {dwTimerLowValue, dwTimerHighValue};
         internalTime ft(UCSBUtility::ReadTime());
@@ -118,7 +123,7 @@ private :
 
     static void TimedThread(void* pThreadData)
     {
-        MakePeriodic* pThis = reinterpret_cast<MakePeriodic*>(pThreadData);
+        MakePeriodic* pThis = static_cast<MakePeriodic*>(reinterpret_cast<PeriodicBase*>(pThreadData));
         bool started = false;
         {
             UCSBUtility::CMutexHolder::ScopedMutex mutex(PeriodicBase::GetMutex());

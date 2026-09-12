@@ -2,6 +2,7 @@
 
 #include "DataSource.h"
 #include "internalTime.h"
+#include "CommandInterface.h"
 
 #include <string>
 
@@ -11,10 +12,13 @@ namespace UCSB_CounterSource
 using nsDataSource::string;
 using nsDataSource::strings;
 using nsDataSource::FieldIter;
+using UCSB_CommandInterface::CommandInterface;
 
 // Dictionary data
 
-class CounterSource : public nsDataSource::DataSource, public nsDataSource::AutoRegister<CounterSource>
+class CounterSource : public nsDataSource::DataSource, 
+    public nsDataSource::AutoRegister<CounterSource>, 
+    public CommandInterface<CounterSource>
 {
 public:
     CounterSource(void);
@@ -24,6 +28,7 @@ public :
     virtual bool Start()
     {
         GetDeviceHolder().RegisterWriter(*this, GetClassGUID());
+
         return true;
     }
 
@@ -56,15 +61,26 @@ public :
         }
 
         // Read the frequency from the configuration
-        std::string frequency = *beg++;
-
-        //// Read the index from the configuration
-        //std::string index = *beg++;
-
-        SetFrequency(static_cast<DWORD>(atoi(frequency.c_str())));
-        //m_Data.index = static_cast<DWORD>(atoi(index.c_str()));
+        SetFrequency(UCSBUtility::ToINT<DWORD>(*beg++));
 
         return beg;
+    }
+
+    static void RegisterCommandFunctions()
+    {
+        AddFunction("IncrementThousands", &CounterSource::IncrementThousands);
+        AddFunction("IncrementHundreds", &CounterSource::IncrementHundreds);
+    }
+
+private :
+    void IncrementThousands()
+    {
+        m_Data.ticks += 1000;
+    }
+
+    void IncrementHundreds(string const& param)
+    {
+        m_Data.ticks += 100 * atoi(param.c_str());
     }
 
 public :

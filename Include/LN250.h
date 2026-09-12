@@ -172,13 +172,13 @@ struct HybridInertialData
 
 struct ModeCommandData
 {
-    static const int MESSAGE_ID = 30;
+    static const int MESSAGE_ID = 0x30;
 
     WORD    MessageValidity;
     WORD    ModeCommand;
     DWORD   InitialLatitudeSemicircles;
     DWORD   InitialLongitudeSemicircles;
-    DWORD   InitialAltitude;
+    SHORT   InitialAltitude;
     SHORT   InitialUTMZone;
     DWORD   InitialUTMNorthings;
     DWORD   InitialUTMEastings;
@@ -196,7 +196,7 @@ struct ModeCommandData
     WORD    Year;
     BYTE    Month;
     BYTE    Day;
-    WORD    Sec;
+    DWORD   EnteredTime;
     WORD    Miscellaneous;
 
     static ModeCommandData Reorder(ModeCommandData const& in)
@@ -226,7 +226,7 @@ struct ModeCommandData
         UCSBUtility::s_reverse(retv.Year, in.Year);
         UCSBUtility::s_reverse(retv.Month, in.Month);
         UCSBUtility::s_reverse(retv.Day, in.Day);
-        UCSBUtility::s_reverse(retv.Sec, in.Sec);
+        UCSBUtility::s_reverse(retv.EnteredTime, in.EnteredTime);
         UCSBUtility::s_reverse(retv.Miscellaneous, in.Miscellaneous);
 
         return retv;
@@ -237,33 +237,118 @@ struct ModeCommandData
         return "LN-250 Mode Command Data";
     }
 
-    //static GUID GetClassGUID()
-    //{
-    //    return UCSBUtility::ConvertToGUID("{3EE2B4C5-D1EB-4fec-B72B-DB25F1DF69ED}");
-    //}
+    static GUID GetClassGUID()
+    {
+        return UCSBUtility::ConvertToGUID("{CF99669A-8974-4897-BB99-645C4F8E39D0}");
+    }
 
-    //static std::vector<UCSBUtility::StringPtrPair>  GetClassDescription()
-    //{
-    //    static UCSBUtility::StringPtrPair definition[] =
-    //    {
-    //        "DPFLOAT_M",	"SystemTimer",				// 1-8 System Timer sec dp fl pt N/A
-    //        "DPFLOAT_M",	"GPSTime",					// 9-16 GPS Time sec dp fl pt N/A
-    //        "SSHORT_M",	    "OutputDataValidity",	    // 17,18 Output Data Validity Word N/A discrete N/A
-    //        "DPFLOAT_M",	"HybridLatitude",	        // 19-26 Hybrid Latitude radians dp fl pt N/A
-    //        "DPFLOAT_M",	"HybridLongitude",			// 27-34 Hybrid Longitude radians dp fl pt N/A
-    //        "DPFLOAT_M",	"HybridAltitude",			// 35-42 Hybrid Altitude (HAE) meters dp fl pt N/A 1
-    //        "SPFLOAT_M",	"HybridNorthVelocity",		// 43-46 Hybrid North Velocity met/sec sp fl pt N/A
-    //        "SPFLOAT_M",	"HybridEastVelocity",		// 47-50 Hybrid East Velocity met/sec sp fl pt N/A
-    //        "SPFLOAT_M",	"HybridVerticalVelocity",	// 51-54 Hybrid Vertical Velocity (+up) met/sec sp fl pt N/A
-    //        "SPFLOAT_M",	"HybridHeadingAngle",		// 55-58 Hybrid Heading Angle radians sp fl pt N/A
-    //        "SPFLOAT_M",	"HybridPitchAngle",			// 59-62 Hybrid Pitch Angle radians sp fl pt N/A
-    //        "SPFLOAT_M",	"HybridRollAngle",			// 63-66 Hybrid Roll Angle radians sp fl pt N/A
-    //        "SPFLOAT_M",	"HybridYawAngle",			// 67-70 Hybrid Yaw Angle radians sp fl pt N/A
-    //        "UCHAR",	    "HybridFOM",		        // 71 Hybrid FOM integer 1
-    //    };
+    static std::vector<UCSBUtility::StringPtrPair>  GetClassDescription()
+    {
+        static UCSBUtility::StringPtrPair definition[] =
+        {
+            "USHORT_M",  "MessageValidity",
+            "USHORT_M",  "ModeCommand",
+            "ULONG_M",  "InitialLatitudeSemicircles",
+            "ULONG_M",  "InitialLongitudeSemicircles",
+            "SSHORT_M",  "InitialAltitude",
+            "SSHORT_M",  "InitialUTMZone",
+            "ULONG_M",  "InitialUTMNorthings",
+            "ULONG_M",  "InitialUTMEastings",
+            "USHORT_M",  "InitialHeadingEntry",
+            "USHORT_M",  "RollAxisBoresightCorrection",
+            "USHORT_M",  "PitchAxisBoresightCorrection",
+            "USHORT_M",  "YawAxisBoresightCorrection",
+            "USHORT_M",  "Fore_AftMIMU",
+            "USHORT_M",  "LateralMIMU",
+            "USHORT_M",  "VerticalMIMU",
+            "USHORT_M",  "Fore_AftReference",
+            "USHORT_M",  "Lateral_Reference",
+            "USHORT_M",  "Vertical_Reference",
+            "UCHAR",    "BIT_RecordNumber",
+            "USHORT_M", "Year",
+            "UCHAR",    "Month",
+            "UCHAR",    "Day",
+            "SLONG_M",  "EnteredTime",
+            "USHORT_M",  "Miscellaneous",
+        };
 
-    //    return UCSBUtility::ConvertToVector(definition);
-    //}
+        return UCSBUtility::ConvertToVector(definition);
+    }
+
+};
+
+struct INSStatusData
+{
+    static const int MESSAGE_ID = 0x30;
+
+    double SystemTimer;
+    short  ModeStatusWords[28];
+
+
+    static INSStatusData Reorder(INSStatusData const& in)
+    {
+        INSStatusData retv;
+
+        // Each field needs to be byte reversed
+        UCSBUtility::s_reverse(retv.SystemTimer, in.SystemTimer);
+
+        const int mswCount = sizeof(in.ModeStatusWords)/sizeof(in.ModeStatusWords);
+
+        for(int i=0; i < mswCount; ++i)
+        {
+            UCSBUtility::s_reverse(retv.ModeStatusWords[i], in.ModeStatusWords[i]);
+        }
+
+        return retv;
+    }
+
+    static std::string GetName()
+    {
+        return "LN-250 INS Status";
+    }
+
+    static GUID GetClassGUID()
+    {
+        return UCSBUtility::ConvertToGUID("{CF99669A-8974-4897-BB99-645C4F8E39D0}");
+    }
+
+    static std::vector<UCSBUtility::StringPtrPair>  GetClassDescription()
+    {
+        static UCSBUtility::StringPtrPair definition[] =
+        {
+            "DPFLOAT_M",	"SystemTimer",				// 1-8 System Timer sec dp fl pt N/A
+            "SSHORT_M",	    "ModeStatusWord",	        // 9,10 
+            "SSHORT_M",	    "BitSummary1",	            // 11,12 
+            "SSHORT_M",	    "BitSummary2",	            // 13,14 
+            "SSHORT_M",	    "SystemProcessor1",	        // 15,16 
+            "SSHORT_M",	    "SystemProcessor2",	        // 17,18 
+            "SSHORT_M",	    "SPSerialInterface",	    // 19, 20
+            "SSHORT_M",	    "SPUARTInterface1",	        // 21, 22
+            "SSHORT_M",	    "SPUARTInterface2",	        // 23, 24
+            "SSHORT_M",	    "SPUARTInterface3",	        // 25, 26
+            "SSHORT_M",	    "LSSI_RS_422Interface",	    // 27, 28
+            "SSHORT_M",	    "AMUX1Status",	            // 29, 30
+            "SSHORT_M",	    "AMUX12Status",	            // 31, 32
+            "SSHORT_M",	    "AMUX2Status",	            // 33, 34
+            "SSHORT_M",	    "SPNVMStatus1",	            // 35, 36
+            "SSHORT_M",	    "SPNVMStatus2",	            // 37, 38
+            "SSHORT_M",	    "SPDetectedEGRFailures",	// 39, 40
+            "SSHORT_M",	    "EGRStatusWord1",	        // 41, 42
+            "SSHORT_M",	    "EGRStatusWord2",	        // 43, 44
+            "SSHORT_M",	    "UARTDataFailure",	        // 45, 46
+            "SSHORT_M",	    "LD_TEC_ControlFailure",	// 47, 48
+            "SSHORT_M",	    "Gyro_Analog_Failure1",	    // 49, 50
+            "SSHORT_M",	    "GyroLoopControlFailure",	// 51, 52
+            "SSHORT_M",	    "SiAC_a4Failure",	        // 53, 54
+            "SSHORT_M",	    "GyroTempFailure",	        // 55, 56
+            "SSHORT_M",	    "AccelTempFailure",	        // 57, 58
+            "SSHORT_M",	    "Temp_IntensityFailure",	// 59, 60
+            "SSHORT_M",	    "GPSTI_nterface",	        // 61, 62
+            "SSHORT_M",	    "GAS_Interface",	        // 63, 64
+        };
+
+        return UCSBUtility::ConvertToVector(definition);
+    }
 
 };
 
@@ -272,6 +357,7 @@ inline void Unused()
 {
     STATIC_ASSERT(sizeof(HybridInertialData) == 71);
     STATIC_ASSERT(sizeof(ModeCommandData) == 55);
+    STATIC_ASSERT(sizeof(INSStatusData) == 64);
 }
 
 inline unsigned char CreateChecksum(const unsigned char * pStart, unsigned count)
@@ -289,85 +375,6 @@ inline unsigned char CreateChecksum(const unsigned char * pStart, unsigned count
 
     return static_cast<unsigned char>(0 - sum);
 }
-
-struct systemTimeToScreen
-{
-    systemTimeToScreen() : m_nextRead (NULL), m_hMutex(INVALID_HANDLE_VALUE), m_init(false) 
-    {
-    }
-
-    ~systemTimeToScreen()
-    {
-        UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "Mutex closing %p\n", m_hMutex);
-        CloseHandle(m_hMutex);
-    }
-
-    void operator() (BYTE messageID, BYTE byteCount, BYTE const* pPayload)
-    {
-        if (messageID != HybridInertialData::MESSAGE_ID)
-        {
-            return;
-        }
-
-        if (byteCount != sizeof(HybridInertialData))
-        {
-            return;
-        }
-
-        HybridInertialData const* pHID = 
-            reinterpret_cast<HybridInertialData const*>(pPayload);
-
-        // do mutex
-        {
-            WaitForSingleObject(GetMutex(), INFINITE);
-            m_hid = *pHID;
-            ReleaseMutex(GetMutex());
-        }
-        m_init = true;
-        //printf("HID SystemTime = %f\n", m_hid.SystemTimer);
-
-        // Where to start the next read
-        m_nextRead = pPayload + byteCount;
-    }
-
-    BYTE const* GetNextRead() const
-    {
-        return m_nextRead;
-    }
-
-    bool isInit() const { return m_init; }
-
-    HybridInertialData GetHybridInertialData () const
-    {
-        HybridInertialData retv = {};
-        if (m_init)
-        {
-            WaitForSingleObject(GetMutex(), INFINITE);
-            retv = HybridInertialData::Reorder(m_hid);
-            ReleaseMutex(GetMutex());
-        }
-
-        return retv;
-    }
-
-
-private :
-    HANDLE GetMutex() const
-    {
-        if (m_hMutex == INVALID_HANDLE_VALUE)
-        {
-            m_hMutex = CreateMutex(NULL, false, NULL);
-        }
-
-        return m_hMutex;
-    }
-    
-    HybridInertialData  m_hid;
-    BYTE const*         m_nextRead;
-    mutable HANDLE      m_hMutex;
-    bool                m_init;
-};
-
 
 // Now chunk the data
 // look for the first SOH that is a valid header

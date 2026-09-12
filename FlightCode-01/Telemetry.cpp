@@ -264,13 +264,15 @@ bool Telemetry::CanSendMoreData() const
     return true;
 }
 
-bool Telemetry::TickImpl(InternalTime::internalTime const& now)
+bool Telemetry::TickImpl(InternalTime::internalTime const&)
 {
-    m_current = now;
-    if (now - m_lastMinute > InternalTime::oneMinute)
+    // Stop using useless InternalTime::internalTime const& now
+    m_current = InternalTime::internalTime::Now();
+
+    if (m_current - m_lastMinute > InternalTime::oneMinute)
     {
         m_sendDictionary = true;
-        m_lastMinute = now;
+        m_lastMinute = m_current;
     }
 
     if (m_createFullConfig)
@@ -287,7 +289,7 @@ bool Telemetry::TickImpl(InternalTime::internalTime const& now)
     if (m_sendDictionary)
     {
         DWORD written;
-        m_telemetryDictionary.CreateFileHeader(m_port.GetHandle(), &written);
+        m_telemetryDictionary.CreateFileHeader(m_port.GetWriteHandle(), &written);
         m_written += written;
         m_sendDictionary = false;
     }
@@ -324,7 +326,7 @@ bool Telemetry::TickImpl(InternalTime::internalTime const& now)
             if (written != 0)
             {
                 m_written += UCSB_Datastream::WriteMessageToFile(
-                    m_port.GetHandle(), UCSB_Datastream::TELEMETRY_EOL).size();
+                    m_port.GetWriteHandle(), UCSB_Datastream::TELEMETRY_EOL).size();
             }
         }
     }
@@ -352,19 +354,19 @@ void Telemetry::CreateFullConfig() const
         }
 
         // Device ID
-        output += "; " + device.DisplayName() +  "\n[" + 
+        output += "[" + device.DisplayName() +  "] [" + 
             GetStringFromCLSID(device.DeviceID()) + "] ";
 
         // Channel Count
         char buffer[40];
-        sprintf_s(buffer, "[%d] ; Channel Count\n", device.GetChannelCount());
+        sprintf_s(buffer, "[%d] ", device.GetChannelCount());
         output += buffer;
 
         vector<string> channels = device.GetChannelNames();
         for (vector<string>::const_iterator cit = channels.begin();
             cit != channels.end(); ++cit)
         {
-            output += "\t[" + *cit + "]\n";
+            output += " [" + *cit + "]";
         }
 
         // Extra line to separate the 
@@ -386,7 +388,7 @@ void Telemetry::CreateFullConfig() const
 
     // Write the name of the telemetry block
     fprintf_s(pFile, "; Name of the data block we are creating\n"
-        "[Full Telemetry]\n\n"
+        "; [Full Telemetry]\n\n"
         "; Remember to change the channel count if removing any channels\n");
     fwrite(&output[0], 1, output.size(), pFile);
     fclose(pFile);

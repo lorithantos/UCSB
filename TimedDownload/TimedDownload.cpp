@@ -48,18 +48,18 @@ const DWORD  maxSleepTime = 1000;
 static bool quit = false;
 static bool displayQueue = false;
 
-// Function to print elements to stderr for debugging purposes
-void PrintPriorityQueueElement(priorityQueue::value_type const& pqElement)
-{
-    UINT64 time = pqElement.first;
-    queuedFile const& qf = pqElement.second;
+string ConvertInt64TimeToString(UINT64 inputTime);
 
+// Function to print elements to stderr for debugging purposes
+void PrintPriorityQueueElement(queuedFile const& qf)
+{
     UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "Server      : %ls\n", qf.sourceServer.c_str());
     UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "Resource    : %ls\n", qf.sourceResource.c_str());
     UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "destination : %ls\n", qf.destinationRootName.c_str());
-    UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "Next time   : %I64d\n", time / oneSecond);
-    UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "startTime   : %I64d\n", qf.startTime / oneSecond);
+    UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "startTime   : %s\n", ConvertInt64TimeToString(qf.startTime).c_str());
     UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "interval    : %I64d\n", qf.downloadInterval / oneSecond);
+    UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "flat fields : %d\n", qf.flatFieldFrameInterval);
+    UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "Camera Type : %s\n", qf.isFLIR ? "FLIR" : "Internet");
     UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "\n");
 }
 
@@ -159,6 +159,20 @@ UINT64 ConvertStringToInt64Time(string const& inputTime)
 }
 
 // Take an input string in hh:mm:ss format and calculate the number
+// of 100ns intervals that represents
+string ConvertInt64TimeToString(UINT64 inputTime)
+{
+    unsigned int s = static_cast<unsigned int>(inputTime / oneSecond);
+    unsigned int m = s / 60;
+    unsigned int h = m / 60;
+
+    char outputTime[120];
+    sprintf_s(outputTime, "%02d:%02d:%02d", h % 24, m % 60, s % 60);
+    
+    return outputTime;
+}
+
+// Take an input string in hh:mm:ss format and calculate the number
 // of 100ns intervals that represents as of today (local time)
 UINT64 ConvertStringToInt64TimeToday(string const& inputTime)
 {
@@ -183,23 +197,6 @@ UINT64 ConvertStringToInt64TimeToday(string const& inputTime)
     return localTime + systemMinusLocal;
 }
 
-//// Sets the input value to a time in the future
-//int FindNextTimeInTheFuture(UINT64& nextTime, UINT64 interval)
-//{
-//    int skipped = 0;
-//
-//    UINT64 now = internalTime::Now() + oneSecond / 100;
-//
-//    if (nextTime <= now)
-//    {
-//        UINT64 diff = now - nextTime;
-//        skipped = static_cast<int>((diff / interval) + 1);
-//        nextTime += skipped * interval;
-//    }
-//
-//    return skipped;
-//}
-//
 // Interpret the configuration file
 // all lines that start with ';' are comments
 // valid lines have the format
@@ -262,11 +259,17 @@ vector<queuedFile> ProcessConfig(vector<string> const& validLines)
         {
             if (fields.size() <= 4)
             {
-                UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "skipping malformed line:\n%s\n", cit->c_str());
+                UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "skipping malformed line:\n%s\nFlat Field interval required [count of frames including flat field]\n", cit->c_str());
                 continue;
             }
 
             qf.flatFieldFrameInterval = atoi(fields[4].c_str());
+
+            if (qf.flatFieldFrameInterval < 1)
+            {
+                UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "Flat Field interval must be greater than zero:\n[%s] does not evaluate to greater than zero\n", fields[4].c_str());
+                continue;
+            }
         }
         else if (fields.size() > 4)
         {
@@ -310,110 +313,62 @@ vector<queuedFile> ReadConfiguration(wstring const& filename)
 }
 
 // Uses jpg as the extension
-void TimeToSubDirectoryAndFilename(SYSTEMTIME st, wstring& subDirectory, wstring& filename, wstring const& ext = L".jpg")
+void TimeToSubDirectoryAndFilename(SYSTEMTIME st, wstring& subDirectory, wstring& filename)
 {
     WCHAR buffer[100];
     swprintf_s(buffer, L"\\%04d%02d%02d\\", st.wYear, st.wMonth, st.wDay);
     subDirectory = wstring(buffer);
     swprintf_s(buffer, L"%02d%02d%02d", st.wHour, st.wMinute, st.wSecond);
-    filename = wstring(buffer) + ext;
+    filename = wstring(buffer);
+}
+
+void ReadFlir(queuedFile& qf, wstring const& fullPathName)
+{
+    bool doFlatField = (qf.frames++ % qf.flatFieldFrameInterval) == 0;
+    ReadCamera(fullPathName + L".fit", doFlatField);
+}
+
+void ReadWebFile(queuedFile& qf, wstring const& fullPathName)
+{
+    if (ReadWebFile(qf.hInternet, qf.sourceResource, fullPathName + L".jpg") != 0)
+    {
+        printf("\n\nLogging: Failure to download\n Source     : %ls\n Destination: %ls\n\n", 
+            (qf.sourceServer + qf.sourceResource).c_str(), fullPathName.c_str());
+    }
 }
 
 // This is the main loop of the program
-// It is on its own thread to allow it to be as simple as possible
-// The basic idea is a priority queue
-// The start times for the next download are all calculated
-// These are used as the keys to a map of the elements to be downloaded
-// When the first element's time is ready that element is removed from the queue
-// The next time for that element is calculated and it is placed back on the queue
-// then the information about that element is used to start a download
-// One optimization might be to allow multiple threads to wait on elements in the queue
-// so as to improve synchronization.
-// This will only matter if the download times cause significant differences in the
-// output images
-int ProcessingLoop(priorityQueue::value_type const* pElement)
+// Each download uses a new thread
+// There is some danger of an accumulation error
+int ProcessingLoop(queuedFile& qfInput)
 {
-    priorityQueue pq;
-    pq[pElement->first] = pElement->second;
-    InternetHandle hInternet (pElement->second.hInternet);   // Take ownership, will call close on exit
-    delete pElement;
+    queuedFile qf = qfInput;
+    InternetHandle hInternet (qf.hInternet);   // Take ownership, will call close on exit
 
-    while(!quit)
+    UINT64 currentDownloadTime = qf.startTime;
+    FindNextTimeInTheFuture(currentDownloadTime, qf.downloadInterval);
+
+    while (!quit)
     {
-        // Start processing the queue
-        priorityQueue::const_iterator head = pq.begin();
-
-        UINT64 currentDownloadTime = head->first;
-        queuedFile qf = head->second;
-        pq.erase(head);
-
-        // Calculate the next time fo this download
-        UINT64 nextQueuedTime = currentDownloadTime + qf.downloadInterval;
-        int skipped = FindNextTimeInTheFuture(nextQueuedTime, qf.downloadInterval) - 1;
-
-        if (skipped > 0)
+        UINT64 now = internalTime::Now();
+        if (now > currentDownloadTime)
         {
-            UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "Skipped %d downloads of %ls\n", skipped, (qf.sourceServer + qf.sourceResource).c_str());
+            SYSTEMTIME sysTime;
+            GetLocalTime(&sysTime);
+            wstring subDirectory, filename;
+            TimeToSubDirectoryAndFilename(sysTime, subDirectory, filename);
+            CreateDirectory((qf.destinationRootName + subDirectory).c_str(), NULL);
+            wstring fullPathName = qf.destinationRootName + subDirectory + filename;
+            //printf(, );
+            printf ("Downloading %30ls\n""Writing %ls: \n", (qf.sourceServer + qf.sourceResource).c_str(), fullPathName.c_str());
+
+            qf.download(qf, fullPathName);
+
+            // This may suffer from timing issues...fix!
+            FindNextTimeInTheFuture(currentDownloadTime, qf.downloadInterval);
         }
-
-        if (nextQueuedTime < internalTime::Now())
+        else
         {
-            int i = 0;
-            i;
-        }
-
-        // Don't stomp on existing queued elements
-        // This loop can only be as long as the total number of queued elements minus one
-        while (pq.find(nextQueuedTime) != pq.end())
-        {
-            nextQueuedTime += 1;
-        }
-        pq[nextQueuedTime] = qf;
-
-        // Debug
-        //for_each(pq.begin(), pq.end(), PrintPriorityQueueElement);
-
-        while (!quit)
-        {
-            // Determine if a time has passed
-            UINT64 now = internalTime::Now();
-            if (displayQueue)
-            {
-                displayQueue = false;
-                //printf ("\nDisplaying current queue\n");
-                for_each(pq.begin(), pq.end(), PrintPriorityQueueElement);
-            }
-
-            if (currentDownloadTime > now)
-            {
-                //int seconds = static_cast<int>(static_cast<__int64>(currentDownloadTime - now) / oneSecond);
-                //printf("Time to next download: %02d:%02d:%02d\r", seconds / 3600, (seconds / 60) % 60, seconds % 60);
-            }
-            else
-            {
-                SYSTEMTIME sysTime;
-                GetLocalTime(&sysTime);
-                wstring subDirectory, filename;
-                TimeToSubDirectoryAndFilename(sysTime, subDirectory, filename, qf.isFLIR ? L".fit" : L".jpg");
-                CreateDirectory((qf.destinationRootName + subDirectory).c_str(), NULL);
-                wstring fullPathName = qf.destinationRootName + subDirectory + filename;
-                //printf(, );
-                printf ("Downloading %30ls\n""Writing %ls: \n", (qf.sourceServer + qf.sourceResource).c_str(), fullPathName.c_str());
-
-                if (qf.isFLIR)
-                {
-                    bool doFlatField = (qf.frames++ % qf.flatFieldFrameInterval) == 0;
-                    ReadCamera(fullPathName, doFlatField);
-                    pq[nextQueuedTime] = qf;
-                }
-                else if (ReadWebFile(qf.hInternet, qf.sourceResource, fullPathName) != 0)
-                {
-                    printf("\n\nLogging: Failure to download\n Source     : %ls\n Destination: %ls\n\n", 
-                        (qf.sourceServer + qf.sourceResource).c_str(), fullPathName.c_str());
-                }
-                break;
-            }
-
             DWORD sleepTime = static_cast<DWORD>((currentDownloadTime - now) / dw100nsPerMS);
             sleepTime = min(sleepTime, maxSleepTime);
 
@@ -428,66 +383,9 @@ int ProcessingLoop(priorityQueue::value_type const* pElement)
 // Simple forwarding function
 void __cdecl ProcessingThread(void* pInput)
 {
-    priorityQueue::value_type const* pQueuedFile = reinterpret_cast<priorityQueue::value_type const*>(pInput);
-    ProcessingLoop(pQueuedFile);
+    queuedFile *pQueuedFile = reinterpret_cast<queuedFile *>(pInput);
+    ProcessingLoop(*pQueuedFile);
 }
-
-//class Logging
-//{
-//public :
-//    Logging()
-//    {
-//        FILE* pFile;
-//        freopen_s(&pFile, "TimedDownload.log", "at+", stderr);
-//        for (int i=0;i < 10 && !pFile;++i)
-//        {
-//            char buffer[] = "TimedDownload0.log";
-//            buffer[strlen(buffer) - 5] = static_cast<char>('0' + i);
-//            freopen_s(&pFile, buffer, "at+", stderr);
-//        }
-//
-//        SYSTEMTIME localTime;
-//        GetLocalTime(&localTime);
-//
-//        // If the file has been used, put some spaces in here
-//        if(ftell(stderr))
-//        {
-//            UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "\n\n");
-//        }
-//
-//        UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "------------NEW INSTANCE------------\n");
-//        UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "Date (yyyy/mm/dd): %04d/%02d/%02d\n", localTime.wYear, localTime.wMonth, localTime.wDay);
-//        UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "Time   (hh:mm:ss):   %02d:%02d:%02d\n", localTime.wHour, localTime.wMinute, localTime.wSecond);
-//        UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "------------------------------------\n");
-//    }
-//
-//    ~Logging()
-//    {
-//        SYSTEMTIME localTime;
-//        GetLocalTime(&localTime);
-//
-//        UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "------------------------------------\n");
-//        UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "Date (yyyy/mm/dd): %04d/%02d/%02d\n", localTime.wYear, localTime.wMonth, localTime.wDay);
-//        UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "Time   (hh:mm:ss):   %02d:%02d:%02d\n", localTime.wHour, localTime.wMinute, localTime.wSecond);
-//        UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "------------NORMAL EXIT-------------\n");
-//    }
-//};
-//
-//
-class StartImageThread
-{    
-public :
-    void operator() (priorityQueue::value_type const& qfPair)
-    {
-        // ProcessingThread responsible for deleting
-        // priority queue element
-        m_handles.push_back(reinterpret_cast<HANDLE>(
-            _beginthread(ProcessingThread, 0, 
-            new priorityQueue::value_type(qfPair))));
-    }
-
-    vector<HANDLE> m_handles;
-};
 
 struct InterpretConfigFile
 {
@@ -515,6 +413,8 @@ int _tmain(int argc, _TCHAR* argv[])
 {
     //Logging setupLog;
 
+    UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "File: %ls\nCompiled: %s\n\n", argv[0], __DATE__);
+
     Internet iNetConnection(L"TimedDownload");
     if (!iNetConnection.isValid())
     {
@@ -529,20 +429,26 @@ int _tmain(int argc, _TCHAR* argv[])
     ConfigFileReader::ReadConfiguration(argc, argv, icf);
 
     // Add each line to the queue
-    vector<queuedFile>::const_iterator cit = sources.begin();
-    priorityQueue pq;
+    vector<queuedFile>::iterator it = sources.begin();
+    //priorityQueue pq;
+    vector<queuedFile> pq;
+
     unsigned i = 0;
-    for(;cit != sources.end(); ++cit, ++i)
+    for(;it != sources.end(); ++it, ++i)
     {
         // Create the root directory
-        CreateDirectory(cit->destinationRootName.c_str(), NULL);
+        CreateDirectory(it->destinationRootName.c_str(), NULL);
 
         // bias to minimize conflicts
-        pq[cit->startTime + i] = *cit;
+        pq.push_back(*it);
+
+        // Default value
+        pq.rbegin()->download = ReadWebFile;
 
         // Skip the setup for files
-        if (cit->isFLIR)
+        if (it->isFLIR)
         {
+            pq.rbegin()->download = ReadFlir;
             continue;
         }
 
@@ -550,18 +456,18 @@ int _tmain(int argc, _TCHAR* argv[])
         WCHAR const* pPassword = NULL;
 
         // If a username or password exists, open the website
-        if (cit->password.length() > 0 || cit->username.length() > 0)
+        if (it->password.length() > 0 || it->username.length() > 0)
         {
-            pUsername = cit->username.c_str();
-            pPassword = cit->password.c_str();
+            pUsername = it->username.c_str();
+            pPassword = it->password.c_str();
         }
         
-        printf("Opening internet connection to: %ls\n", cit->sourceServer.c_str());
-        UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "Opening internet connection to: %ls\n", cit->sourceServer.c_str());
+        printf("Opening internet connection to: %ls\n", it->sourceServer.c_str());
+        UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "Opening internet connection to: %ls\n", it->sourceServer.c_str());
 
         // NOTE, we are not parsing the input, so HTTP is all you get
         HINTERNET hConnection = InternetConnect(iNetConnection, 
-            cit->sourceServer.c_str(), INTERNET_DEFAULT_HTTP_PORT, 
+            it->sourceServer.c_str(), INTERNET_DEFAULT_HTTP_PORT, 
             pUsername, pPassword, INTERNET_SERVICE_HTTP, 0, 
             reinterpret_cast<DWORD_PTR>(&iNetConnection));
         if (hConnection == NULL)
@@ -574,15 +480,19 @@ int _tmain(int argc, _TCHAR* argv[])
             UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "%s\n", buffer);
         }
 
-        pq[cit->startTime + i].hInternet = hConnection;
+        (*pq.rbegin()).hInternet = hConnection;
     }
 
     // Print out our interpretation of the input file:
     UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "Configuration file interpretation:\n");
     for_each(pq.begin(), pq.end(), PrintPriorityQueueElement);
     
-    StartImageThread threads = for_each(pq.begin(), pq.end(), StartImageThread());
-    if (threads.m_handles.size() == 0)
+    vector<HANDLE> threads;
+    for_each(pq.begin(), pq.end(), [&] (queuedFile& qf) {
+        threads.push_back(reinterpret_cast<HANDLE>(_beginthread(ProcessingThread, 0, &qf)));
+    });
+    
+    if (threads.size() == 0)
     {
         UCSBUtility::LogError(__FUNCTION__, __FILE__, __LINE__, "No threads started, nothing to do, exiting\n");
         printf("No threads started, nothing to do, exiting\n");
@@ -611,6 +521,6 @@ int _tmain(int argc, _TCHAR* argv[])
     }
 
     printf ("\nWaiting on threads to die\n");
-    WaitForMultipleObjects(threads.m_handles.size(), &threads.m_handles[0], true, INFINITE);
+    WaitForMultipleObjects(threads.size(), &threads[0], true, INFINITE);
 }
 
