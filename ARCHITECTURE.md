@@ -22,7 +22,8 @@ Source files are stamped July 2011. Every project carries both a `.vcproj` (VS20
 is a VS2008 codebase that was run once through the VS2010 upgrade wizard and then stopped.
 The `vc100` artifacts under `Debug\` are from that toolchain.
 
-Nothing here is mid-flight. The idioms that look odd — the CRTP registration template, the
+Nothing here is mid-flight. The idioms that look odd — the [CRTP](#the-mechanism) registration
+template (*Curiously Recurring Template Pattern*, explained where it is used), the
 `BYTE`/`DWORD`/`GUID` vocabulary, the hand-rolled double buffer — are period-appropriate and
 settled. Read them as finished, not as work in progress.
 
@@ -78,7 +79,7 @@ static is the factory: `new T`, then `SetDeviceHolder`.
 
 **3. `AutoRegister<T>`** — `DataSource.h:143`
 
-A CRTP base holding `static RegisterHelper<T> autoRegistration`, defined out-of-line at
+A **CRTP** base holding `static RegisterHelper<T> autoRegistration`, defined out-of-line at
 `DataSource.h:163`. Constructing that static *is* the registration. A device opts in purely by
 deriving:
 
@@ -86,6 +87,26 @@ deriving:
 class Magnetometer : public nsDataSource::DataSource,
                      public nsDataSource::AutoRegister<Magnetometer>
 ```
+
+> **CRTP — the Curiously Recurring Template Pattern.** A class derives from a template
+> instantiated with *itself*: `class Magnetometer : public AutoRegister<Magnetometer>`. Named by
+> James Coplien in 1995, for the shape he kept running into.
+>
+> The point is that **the base class knows the derived type at compile time**. Ordinary
+> inheritance is blind downward — a base cannot name its derived class — but here the base is
+> *parameterised* on it, so `AutoRegister<T>` and `RegisterHelper<T>` can call `T::GetName()` and
+> `new T` freely. It is sometimes called *static polymorphism*: dispatch decided during template
+> instantiation, with no virtual table and no runtime cost.
+>
+> The property this design actually leans on is subtler. `AutoRegister<Magnetometer>` and
+> `AutoRegister<Ashtech>` are **different types**, so each gets its *own* `autoRegistration`
+> static — fourteen devices, fourteen separate statics, fourteen constructor runs, fourteen map
+> insertions, from one line of declaration each. A plain non-template base class would give every
+> device one *shared* static instead, and a virtual function could not help at all, because
+> registration has to happen before any object exists.
+>
+> Fuller explanation:
+> [Wikipedia — Curiously recurring template pattern](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern).
 
 ### Why the `dummyVar` nonsense
 
@@ -98,8 +119,28 @@ away; `RegisterHelper` holds a `std::string dummyVar` that exists only to be tou
 This is not superstition. **A static data member of a class template is only instantiated if it
 is odr-used.** Without something referencing `autoRegistration`, the compiler is entitled to
 never instantiate it, the constructor never runs, and the device silently never registers.
-Touching the member forces instantiation. That is also why `AutoRegister` takes an unused `int`
-— it gives every derived class a constructor to call, which is what drags the touch in:
+Touching the member forces instantiation.
+
+> **ODR — the One Definition Rule**, and *odr-use*. The ODR is the C++ rule that every entity may
+> have exactly one definition in a program. Its consequence here is the related notion of
+> **odr-use**: roughly, a variable is odr-used when the program needs its *address or storage*,
+> rather than merely its value or its name.
+>
+> That distinction is the whole issue. A static data member of a class template is only
+> *instantiated* — actually brought into existence, with storage allocated and its constructor
+> run — if something odr-uses it. Merely declaring it is not enough. So `autoRegistration` can be
+> declared in every device and still never exist, and since its constructor is what performs the
+> registration, the device would silently fail to appear in the factory map. No error, no warning:
+> just a device that cannot be created from config.
+>
+> `dummyVar.c_str()` calls a member function on the object, which requires the object, which
+> forces instantiation. That is the entire purpose of the line.
+>
+> Fuller explanation:
+> [cppreference — Definitions and ODR](https://en.cppreference.com/w/cpp/language/definition).
+
+That is also why `AutoRegister` takes an unused `int` — it gives every derived class a
+constructor to call, which is what drags the touch in:
 
 ```cpp
 Magnetometer::Magnetometer(void) : AutoRegister<Magnetometer>(0)
