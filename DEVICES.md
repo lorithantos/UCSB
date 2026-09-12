@@ -348,8 +348,14 @@ longitude and heading are present but commented out — one of them, `HybridHead
 - **Which of the 16 `Telescope` channels correspond to which detectors or frequency bands.** The
   names are positional only.
 
-**Answerable from data now.** The repository contains seven real recordings
-(`FlightCode-01\20121220\*.spaceball`, 20 Dec 2012) made with `Telescope`, `ClockSync`, two
-`Digital Counter`s and `CommandLineDisplay` enabled. Several questions above — value ranges,
-units by inspection, `ticks` continuity, whether the missing FITS `TZERO` ever mattered — are
-now empirical rather than archaeological.
+**The recordings in this repository cannot answer them.** `FlightCode-01\20121220\` holds seven
+`.spaceball` files from 20 December 2012, but they are **development test recordings made while
+working on the software**, not flight data. `Telescope` is configured and appears in every file's
+dictionary with all 49 channels declared — and emits **zero samples**. The only data is from
+`ClockSync` and the two `Digital Counter` instances.
+
+Verified with [`tools\SpaceballToJson`](tools/SpaceballToJson/README.md) across all seven files:
+13,000+ records, none of them from the telescope.
+
+That makes these files an excellent test of the *recorder* and useless as a source of *science*.
+Answering the questions above needs a recording made with the instrument attached and responding.

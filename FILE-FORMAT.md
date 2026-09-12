@@ -12,8 +12,11 @@ Companion to [`ARCHITECTURE.md`](ARCHITECTURE.md), which covers how the program 
 stream is assembled, [`CONFIGURATION.md`](CONFIGURATION.md) for what was recorded, and
 [`DEVICES.md`](DEVICES.md) for what each channel means.
 
-> Describes the **December 2012** working copy. Seven real recordings made with that build are in
-> `FlightCode-01\20121220\` — use them to check any claim here against actual bytes.
+> Describes the **December 2012** working copy. Every claim here has been checked against real
+> bytes: `tools\SpaceballToJson` parses the seven recordings in `FlightCode-01\20121220\` —
+> 13,000+ records — with every diagnostic counter at zero. Those recordings are development test
+> files rather than flight data (the telescope is declared in them but emits nothing), which makes
+> them a good test of the format and no use as science.
 
 ---
 
