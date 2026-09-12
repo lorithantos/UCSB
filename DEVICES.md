@@ -62,9 +62,16 @@ Two further GUIDs are not devices: `GUID_InternalTimer`
 message types `LN-250 INS Status` and `LN-250 Mode Command Data` (`Include\LN250.h`), which are
 data *shapes* the reader can publish rather than configurable devices.
 
-**Note two devices can be instantiated more than once.** The shipped config runs two
+**Channel counts above are each device's *own* channels.** The on-disk dictionary reports two
+more for every device — `computerClock` and `index`, prepended by `timedT<T>` — so `Telescope`
+appears as 51, `Digital Counter` as 7, `ClockSync` as 3. Confirmed against real files with
+[`tools\SpaceballToJson`](tools/SpaceballToJson/README.md).
+
+**Note a device can be instantiated more than once.** The shipped config runs two
 `[Digital Counter]` instances at different rates — the factory creates a new object per config
-line, and each gets its own sequential `m_index`, so they are distinguishable in the stream.
+line, and each gets its own sequential `m_index`. They share one dictionary entry and are told
+apart by `index` in the record, which is visible in the decoded output: two independent `ticks`
+sequences interleaved under `index` 0 and 1.
 
 ---
 
@@ -193,7 +200,9 @@ Details for data users in
 `[Telescope] [frequency Hz] [PortName] [BaudRate]` · **enabled at 10 Hz**, `\\.\COM4`, 9600 ·
 GUID `A38A47EE-D74E-479a-A2C1-FE7EFDC2C4CF`
 
-**49 channels**: `Rev`, plus **16 detector channels × three Stokes parameters**, all `SPFLOAT_I`.
+**49 channels of its own**: `Rev`, plus **16 detector channels × three Stokes parameters**, all
+`SPFLOAT_I`. On disk the dictionary reports **51**, because `timedT<T>` prepends `computerClock`
+and `index` — giving a 205-byte record (8 + 1 + 4 + 48×4).
 
 | Channel | Type | Meaning |
 |---|---|---|
